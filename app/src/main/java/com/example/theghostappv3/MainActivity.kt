@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import com.example.theghostappv3.ui.CameraActivity
 import com.example.theghostappv3.ui.EmfActivity
+import com.example.theghostappv3.ui.Gallery
 import com.example.theghostappv3.ui.MicrophoneActivity
 
 class MainActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var imageButton_Microphone: ImageView
     lateinit var imageButton_Camera: ImageView
     lateinit var imageButton_Emf: ImageView
+    lateinit var imageButton_Gallery: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +45,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        imageButton_Gallery = findViewById(R.id.imageButton_Gallery)
 
+        imageButton_Gallery.setOnClickListener {
+            val intent = Intent(this, Gallery::class.java)
+            startActivity(intent)
+        }
 
 
 

@@ -1,7 +1,6 @@
-package com.example.theghostappv3.ui
+package com.example.theghostappv3.utilities
 
 object Const {
-
 
     const val CAMERA_PERMISSION_CODE = 100
     const val TAG = "CameraActivity"

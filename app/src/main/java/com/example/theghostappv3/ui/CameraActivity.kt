@@ -1,11 +1,16 @@
 package com.example.theghostappv3.ui
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -17,8 +22,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.example.theghostappv3.MainActivity
 import com.example.theghostappv3.R
-import com.example.theghostappv3.ui.Const.REQUEST_CODE_PERMISSIONS
+import com.example.theghostappv3.utilities.Const.REQUEST_CODE_PERMISSIONS
 import com.example.theghostappv3.databinding.ActivityCameraBinding
+import com.example.theghostappv3.utilities.Const
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,15 +32,13 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class CameraActivity : AppCompatActivity() {
+open class CameraActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCameraBinding
     lateinit var imageButton_Camera: Button
-
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
-
-
+    lateinit var imageView: ImageView
     private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +64,17 @@ class CameraActivity : AppCompatActivity() {
             takePhoto()
         }
 
+        // make image view invisible until photo is taken
+
+        imageView = findViewById(R.id.imageView_PreviewRecent)
+
+        imageView.visibility = ImageView.INVISIBLE
+
+        binding.imageViewPreviewRecent.setOnClickListener {
+            val intent = Intent(this@CameraActivity, Gallery::class.java)
+            startActivity(intent)
+        }
+
 
     }
 
@@ -75,6 +90,9 @@ class CameraActivity : AppCompatActivity() {
 
     }
 
+
+
+
     private fun takePhoto() {
 
         val imageCapture = imageCapture ?: return
@@ -84,6 +102,7 @@ class CameraActivity : AppCompatActivity() {
                 Const.FILE_NAME_FORMAT, Locale.UK
             ).format(System.currentTimeMillis()) + ".jpg"
         )
+
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
@@ -101,7 +120,13 @@ class CameraActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d("CameraX", msg)
 
-                    // create a popup with possibility to send the photo trough telephony or email
+
+
+                    // show image preview from recently taken
+
+                    binding.imageViewPreviewRecent.setImageURI(savedUri)
+                    binding.imageViewPreviewRecent.visibility = ImageView.VISIBLE
+
 
 
                 }
@@ -157,6 +182,7 @@ class CameraActivity : AppCompatActivity() {
     }
 
 
+
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, MainActivity::class.java)
@@ -170,6 +196,10 @@ class CameraActivity : AppCompatActivity() {
     }
 
 }
+
+
+
+
 
 
 
