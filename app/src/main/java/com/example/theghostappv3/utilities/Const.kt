@@ -14,8 +14,19 @@ object Const {
     const val REQUEST_CODE_PERMISSIONS_SETTINGS = 70
     const val FILE_NAME = "photo.jpg"
 
+    const val ACCESSFINELOCATION = 100
+    const val ACCESSCOARSELOCATION = 101
+    const val ACCESSBACKGROUNDLOCATION = 102
+
+    const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    const val REQUEST_CHECK_SETTINGS = 2
+
     const val VIDEO_FILE_NAME = "video.mp4"
     const val AUDIO_FILE_NAME = "audio.mp3"
 
-    val REQUEST_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    val REQUEST_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA,android.Manifest.permission.RECORD_AUDIO,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE,
+        android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+
 }
