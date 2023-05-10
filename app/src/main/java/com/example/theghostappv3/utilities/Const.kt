@@ -24,7 +24,7 @@ object Const {
     const val VIDEO_FILE_NAME = "video.mp4"
     const val AUDIO_FILE_NAME = "audio.mp3"
 
-    val REQUEST_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA,android.Manifest.permission.RECORD_AUDIO,
+    val REQUEST_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE,
         android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)

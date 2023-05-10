@@ -3,9 +3,9 @@ package com.example.theghostappv3.ui
 
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,18 +16,19 @@ import android.widget.ImageView
 
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-
+import com.example.theghostappv3.MainActivity
 import com.example.theghostappv3.R
-
 import com.example.theghostappv3.databinding.ActivityCameraBinding
+import com.example.theghostappv3.utilities.Const
+import com.example.theghostappv3.utilities.Const.REQUEST_CODE_PERMISSIONS
 import com.google.common.util.concurrent.ListenableFuture
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -44,7 +45,7 @@ open class CameraActivity : AppCompatActivity() {
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var cameraSelector: CameraSelector
     private var imageCapture: ImageCapture? = null
-    private lateinit var cameraExecutor : ExecutorService
+    private lateinit var cameraExecutor: ExecutorService
     private lateinit var previewRecent: ImageView
     private lateinit var outputDirectory: File
 
@@ -52,6 +53,7 @@ open class CameraActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -68,13 +70,17 @@ open class CameraActivity : AppCompatActivity() {
 
             animateFlash()
         }
-      previewRecent = findViewById(R.id.previewRecent)
-      previewRecent.visibility = View.INVISIBLE
 
-      binding.previewRecent.setOnClickListener(){
-          val intent = Intent(this, GalleryActivity::class.java)
-          startActivity(intent)
-      }
+
+
+
+        previewRecent = findViewById(R.id.previewRecent)
+        previewRecent.visibility = View.INVISIBLE
+
+        binding.previewRecent.setOnClickListener() {
+            val intent = Intent(this, GalleryActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     companion object {
@@ -83,44 +89,49 @@ open class CameraActivity : AppCompatActivity() {
     }
 
 
-
-
     private fun startCamera() {
-// listening for data from the camera
+
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
             imageCapture = ImageCapture.Builder().build()
-            // connecting a preview use case to the preview in the xml file.
             val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(binding.previewView.surfaceProvider)
 
             }
             try {
-                // clear all the previous use cases first.
                 cameraProvider.unbindAll()
-                // binding the lifecycle of the camera to the lifecycle of the application.
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+                cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, preview,)
+
             } catch (e: Exception) {
-                Log.d(TAG, "Use case binding failed")
+                Log.e("CameraX", "Use case binding failed", e)
             }
 
         }, ContextCompat.getMainExecutor(this))
 
     }
 
-    private val cameraProviderResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            startCamera()
-        } else {
-            Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
-        }
+    private fun allPermissionsGranted() = Const.REQUEST_PERMISSIONS.all {
+        checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
     }
 
+    private val cameraProviderResult =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permGranted: Boolean ->
+            if (permGranted) {
+                startCamera()
 
-    private fun takePhoto(){
-        imageCapture?.let{
+            } else {
+                Toast.makeText(this, "Permissions not granted by the user", Toast.LENGTH_SHORT)
+                    .show()
+                finish()
+            }
+        }
+
+
+    private fun takePhoto() {
+
+        imageCapture?.let {
             val fileName = "${System.currentTimeMillis()}+.jpg"
-            val photoFile = File(externalMediaDirs[0],fileName)
+            val photoFile = File(externalMediaDirs[0], fileName)
 
             val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
@@ -129,8 +140,8 @@ open class CameraActivity : AppCompatActivity() {
                 outputFileOptions,
                 cameraExecutor,
                 object : ImageCapture.OnImageSavedCallback {
-                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults){
-                        Log.i(TAG,"The image has been saved in ${photoFile.toUri()}")
+                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                        Log.i(TAG, "The image has been saved in ${photoFile.toUri()}")
 
                         binding.previewView.post {
                             previewRecent.visibility = View.VISIBLE
@@ -172,8 +183,13 @@ open class CameraActivity : AppCompatActivity() {
     }
 
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraExecutor.shutdown()
+    }
 }
+
+
 
 
 

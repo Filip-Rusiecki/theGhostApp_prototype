@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.theghostappv3.R
+import com.example.theghostappv3.utilities.ProximitySensor
+import kotlin.math.sqrt
 
 
 class EmfActivity : AppCompatActivity() {
@@ -19,6 +21,8 @@ class EmfActivity : AppCompatActivity() {
     lateinit var sensorEventListener: SensorEventListener
     lateinit var progressBar: ProgressBar
 
+    private lateinit var proximitySensor: ProximitySensor
+
 
 
 
@@ -27,11 +31,15 @@ class EmfActivity : AppCompatActivity() {
         setContentView(R.layout.activity_emf)
 
         progressBar = findViewById(R.id.EmfMeter_progBar)
-
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
 
+        proximitySensor = ProximitySensor(this)
+
+        if (sensor == null) {
+
+            Toast.makeText(this, "No sensor detected", Toast.LENGTH_SHORT).show()
+        }
 
 
         sensorEventListener = object : SensorEventListener {
@@ -39,56 +47,49 @@ class EmfActivity : AppCompatActivity() {
                 progressBar.progress = accuracy
             }
 
+
             override fun onSensorChanged(event: SensorEvent?) {
-                if (event != null) {
+                event?.let {
+                    val x = it.values[0]
+                    val y = it.values[1]
+                    val z = it.values[2]
 
+                    val mag = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+                    progressBar.progress = mag.toInt()
 
-                    progressBar.progress = event.values[0].toInt()
+                    val color = if (mag > 100) Color.RED
+                                else if(mag > 50) Color.YELLOW else Color.GREEN
 
-                    progressBar.currentDrawable?.setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN)
-
-                    // Colour change on progress bar based on value
-
-                    if(event.values[0] > 50) {
-                        progressBar.currentDrawable?.setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN)
+                    if(mag >= 100){
+                        Toast.makeText(this@EmfActivity, "Ghost Detected", Toast.LENGTH_SHORT).show()
                     }
 
 
-                    if (event.values[0] > 100) {
-                        progressBar.currentDrawable?.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN)
-                    }
+                    progressBar.progressDrawable.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN)
+
 
                 }
-
-
-
-            }// end of sensor changed
-
-
-
-        } // if sensor is null show toast message
-
-        if (sensorManager == null) {
-
-            Toast.makeText(this, "No sensor detected", Toast.LENGTH_SHORT).show()
-
+            }
         }
-
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-
     }
 
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(sensorEventListener)
+            override fun onPause() {
+                super.onPause()
+                sensorManager.unregisterListener(sensorEventListener)
+                proximitySensor.stopListening()
+            }
+
+            override fun onResume() {
+                super.onResume()
+                sensorManager.registerListener(
+                    sensorEventListener,
+                    sensor,
+                    SensorManager.SENSOR_DELAY_NORMAL
+
+                )
+                proximitySensor.startListening()
+            }
+
+
+
     }
-
-    override fun onResume() {
-        super.onResume()
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-
-
-
-}

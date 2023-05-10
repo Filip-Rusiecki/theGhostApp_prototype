@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var imageButton_Emf: ImageView
     lateinit var imageButton_Gallery: ImageView
     lateinit var imageButton_Map: ImageView
+    lateinit var imageButton_Settings: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,13 @@ class MainActivity : AppCompatActivity() {
 
         imageButton_Map.setOnClickListener {
             val intent = Intent(this, MapActivity::class.java)
+            startActivity(intent)
+        }
+
+        imageButton_Settings = findViewById(R.id.imageButton_Settings)
+
+        imageButton_Settings.setOnClickListener {
+            val intent = Intent(this, Settings::class.java)
             startActivity(intent)
         }
 

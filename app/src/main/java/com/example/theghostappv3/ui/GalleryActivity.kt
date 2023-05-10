@@ -13,19 +13,18 @@ class GalleryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
-        var binding = ActivityGalleryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         val directory = File(externalMediaDirs[0].absolutePath)
         val files = directory.listFiles() as Array<File>
 
         val adapter = GalleryAdapter(files.reversedArray())
-        binding.viewPager.adapter = adapter
+
+        var binding: ActivityGalleryBinding = ActivityGalleryBinding.inflate(layoutInflater)
+        setContentView(/* view = */ binding.root)
+
+
+        adapter.also { binding.viewPager.adapter = it }
 
     }
-
-
-
 
     override fun onBackPressed() {
         super.onBackPressed()
