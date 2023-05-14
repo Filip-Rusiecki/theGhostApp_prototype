@@ -28,4 +28,8 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="takephoto">takePhoto</string>
     <string name="recently_taken">Recently Taken</string>
+    <string name="settings">settings</string>
+    <string name="speech_to_text">Speech to text</string>
+    <string name="emf_meter">EMF Meter</string>
+    <string name="camera_activity">camera activity</string>
 </resources>

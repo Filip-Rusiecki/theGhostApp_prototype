@@ -1,17 +1,17 @@
 package com.example.theghostappv3
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.theghostappv3.ui.*
+
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var imageButton_Microphone: ImageView
     lateinit var imageButton_Camera: ImageView
     lateinit var imageButton_Emf: ImageView
-    lateinit var imageButton_Gallery: ImageView
     lateinit var imageButton_Map: ImageView
     lateinit var imageButton_Settings: ImageView
 
@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
 
 
@@ -51,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MapActivity::class.java)
             startActivity(intent)
         }
+
 
         imageButton_Settings = findViewById(R.id.imageButton_Settings)
 

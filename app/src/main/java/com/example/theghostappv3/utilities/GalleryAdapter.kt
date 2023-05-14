@@ -1,4 +1,4 @@
-package utilities
+package com.example.theghostappv3.utilities
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

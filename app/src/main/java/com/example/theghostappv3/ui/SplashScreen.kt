@@ -1,11 +1,11 @@
 package com.example.theghostappv3.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.theghostappv3.MainActivity
 import com.example.theghostappv3.R
@@ -19,6 +19,8 @@ class SplashScreen : AppCompatActivity() {
 
         val imageView: ImageView = findViewById(ghost_splash)
         Glide.with(this).load(R.drawable.ghost_splash_main).into(imageView)
+
+// todo add sound effect and fix the anim timing and add a loading bar
 
 
         Handler(Looper.getMainLooper()).postDelayed({

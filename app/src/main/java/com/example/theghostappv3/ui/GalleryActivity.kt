@@ -1,10 +1,10 @@
 package com.example.theghostappv3.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.theghostappv3.R
 import com.example.theghostappv3.databinding.ActivityGalleryBinding
-import utilities.GalleryAdapter
+import com.example.theghostappv3.utilities.GalleryAdapter
 import java.io.File
 
 
@@ -19,7 +19,7 @@ class GalleryActivity : AppCompatActivity() {
         val adapter = GalleryAdapter(files.reversedArray())
 
         var binding: ActivityGalleryBinding = ActivityGalleryBinding.inflate(layoutInflater)
-        setContentView(/* view = */ binding.root)
+        setContentView(binding.root)
 
 
         adapter.also { binding.viewPager.adapter = it }

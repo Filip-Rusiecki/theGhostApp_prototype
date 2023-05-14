@@ -45,7 +45,7 @@ class ProximitySensor(context: Context): SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // TODO
+        // not needed
     }
 
 
@@ -54,6 +54,7 @@ class ProximitySensor(context: Context): SensorEventListener {
 
     }
 
+// settings
     private fun vibrationAllowed(): Boolean {
         return sharedPreferences.getBoolean("proximity_allowed", true)
     }

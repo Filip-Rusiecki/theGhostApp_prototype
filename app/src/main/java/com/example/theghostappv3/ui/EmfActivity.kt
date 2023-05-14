@@ -5,10 +5,10 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.theghostappv3.R
 import com.example.theghostappv3.utilities.ProximitySensor
 import kotlin.math.sqrt
@@ -51,13 +51,11 @@ class EmfActivity : AppCompatActivity() {
             override fun onSensorChanged(event: SensorEvent?) {
                 event?.let {
                     val x = it.values[0]
-                    val y = it.values[1]
-                    val z = it.values[2]
 
-                    val mag = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+                    val mag = sqrt((x * x).toDouble()).toFloat()
                     progressBar.progress = mag.toInt()
 
-                    val color = if (mag > 100) Color.RED
+                    val color = if (mag >= 100) Color.RED
                                 else if(mag > 50) Color.YELLOW else Color.GREEN
 
                     if(mag >= 100){

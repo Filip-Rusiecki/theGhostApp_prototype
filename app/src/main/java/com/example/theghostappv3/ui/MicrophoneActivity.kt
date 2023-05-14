@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
@@ -13,15 +12,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.theghostappv3.R
 import com.example.theghostappv3.utilities.ProximitySensor
-import com.example.theghostappv3.utilities.textOutputAdapter
+import com.example.theghostappv3.utilities.TextOutputAdapter
 import java.util.*
 import kotlin.math.sqrt
 
@@ -29,9 +28,7 @@ import kotlin.math.sqrt
 class MicrophoneActivity : AppCompatActivity() {
 
     lateinit var proximitySensor: ProximitySensor
-
     lateinit var microphoneImageView: ImageView
-    lateinit var outputText: TextView
     lateinit var textToSpeech: TextToSpeech
     lateinit var sound_progressBar: ProgressBar
     lateinit var sound_Switch : Switch
@@ -39,7 +36,7 @@ class MicrophoneActivity : AppCompatActivity() {
 
     val outputList = mutableListOf<String>()
 
-    lateinit var outputAdapter: textOutputAdapter
+    lateinit var outputAdapter: TextOutputAdapter
 
     lateinit var activityResultLuncher: ActivityResultLauncher<Intent>
 
@@ -76,7 +73,7 @@ class MicrophoneActivity : AppCompatActivity() {
         sound_progressBar = findViewById(R.id.sound_progressBar)
         sound_Switch = findViewById(R.id.sound_Switch)
 
-        outputAdapter = textOutputAdapter(outputList)
+        outputAdapter = TextOutputAdapter(outputList)
         outputRecyclerView = findViewById(R.id.recyclerView_textOutput)
         outputRecyclerView.adapter = outputAdapter
 
@@ -110,14 +107,13 @@ class MicrophoneActivity : AppCompatActivity() {
 
                 addTextOutput(Objects.requireNonNull(resultArray[0]))
 
-                textToSpeech = TextToSpeech(this, TextToSpeech.OnInitListener { status ->
+                textToSpeech = TextToSpeech(this) { status ->
                     if (status != TextToSpeech.ERROR) {
-
 
                         textToSpeech.language = Locale.UK
                         textToSpeech.speak(resultArray[0], TextToSpeech.QUEUE_ADD, null)
                     }
-                })
+                }
 
             }
         }
@@ -191,7 +187,6 @@ class MicrophoneActivity : AppCompatActivity() {
                 }
             }
         }.start()
-
     }
 
     private fun calculateRMSLevel(audioData: ShortArray): Double {
